@@ -6,7 +6,7 @@ import { createGrassTexture, createDryGrassTexture } from '../utils/texture.js';
 export class GrassField {
   constructor(gl, params = {}) {
     this._gl = gl;
-    const { x0=-35, z0=-110, x1=-8, z1=15, count=200, side='left' } = params;
+    const { x0=-35, z0=-110, x1=-8, z1=15, count=200, side='left', heightFn=null } = params;
 
     this._tex = side==='left' ? createGrassTexture(gl) : createDryGrassTexture(gl);
     this._meshes = [];
@@ -22,16 +22,24 @@ export class GrassField {
       const gs = 0.3 + rng()*0.5;
       const gy = rng()*0.2;
 
+      // Cross-shaped blade (two perpendicular quads) — looks full from any angle
+      const h = gs * 2.5;
       const geo = {
-        positions: [-gs,gy,0, gs,gy,0, gs,gy+gs*2.5,0, -gs,gy+gs*2.5,0],
-        texCoords: [0,0, 1,0, 1,1, 0,1],
-        normals:   [0,0,1, 0,0,1, 0,0,1, 0,0,1],
-        indices:   [0,1,2, 0,2,3]
+        positions: [
+          // Quad 1: in XY plane
+          -gs, gy, 0,   gs, gy, 0,   gs, gy+h, 0,   -gs, gy+h, 0,
+          // Quad 2: in ZY plane
+           0, gy,-gs,    0, gy, gs,    0, gy+h, gs,    0, gy+h,-gs
+        ],
+        texCoords: [0,0, 1,0, 1,1, 0,1,  0,0, 1,0, 1,1, 0,1],
+        normals:   [0,0,1, 0,0,1, 0,0,1, 0,0,1,  1,0,0, 1,0,0, 1,0,0, 1,0,0],
+        indices:   [0,1,2, 0,2,3,  4,5,6, 4,6,7]
       };
 
+      const hillY = heightFn ? heightFn(gx) : 0;
       this._meshes.push(uploadMesh(gl, geo));
       this._models.push(mat4.multiply(
-        mat4.fromTranslation(gx, 0, gz),
+        mat4.fromTranslation(gx, hillY, gz),
         mat4.fromRotationY(rng()*Math.PI)
       ));
     }

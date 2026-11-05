@@ -1,55 +1,53 @@
 import { mat4 } from '../utils/math.js';
 import { uploadMesh, drawMesh } from '../renderer.js';
-import { createBrickTexture, createConcreteTexture, createCurbTexture } from '../utils/texture.js';
-import { makePlane, makeBox } from '../utils/geometry.js';
+import { createBrickTexture, createConcreteTexture, createCurbTexture, createGrassTexture } from '../utils/texture.js';
+import { makePlane, makeBox, makeHillPlane } from '../utils/geometry.js';
 
 export class Road {
   constructor(gl) {
     this._gl = gl;
 
-    this._brickTex    = createBrickTexture(gl);
-    this._concreteTex = createConcreteTexture(gl);
-    this._curbTex     = createCurbTexture(gl);
+    this._brickTex = createBrickTexture(gl);
+    this._curbTex  = createCurbTexture(gl);
+    this._grassTex = createGrassTexture(gl);
 
-    const ZNEAR =  12;   // near end of road
-    const ZFAR  = -110;  // far end into distance
-    const LEN   = Math.abs(ZFAR - ZNEAR);
-    const RWIDE = 10;    // road half-width = 5 (total 10)
+    const ZNEAR =  12;
+    const ZFAR  = -110;
 
-    // --- Road surface (brick) ---
-    // UV: 10 repeats across width, 60 repeats along length (fine brick pattern)
-    this._roadMesh = uploadMesh(gl,
-      makePlane(-RWIDE/2, ZFAR, RWIDE/2, ZNEAR, 0, 1, 10, 60)
-    );
+    // --- Left road lane: x -8 to -2 ---
+    this._leftLaneMesh  = uploadMesh(gl, makePlane(-8, ZFAR, -2, ZNEAR, 0, 1, 6, 60));
 
-    // --- Center divider stripe ---
-    this._stripeMesh = uploadMesh(gl,
-      makePlane(-0.18, ZFAR, 0.18, ZNEAR, 0.01, 1, 1, LEN/2)
-    );
+    // --- Right road lane: x 2 to 8 ---
+    this._rightLaneMesh = uploadMesh(gl, makePlane( 2, ZFAR,  8, ZNEAR, 0, 1, 6, 60));
 
-    // --- Left curb box: x from -5.3 to -5, y 0 to 0.2 ---
-    const curbGeo = makeBox(-5.3, 0, ZFAR, -5.0, 0.2, ZNEAR);
-    this._curbLeftMesh = uploadMesh(gl, curbGeo);
+    // --- Center median (mount-shaped green park strip): x -2 to 2, peaks at 0.5 ---
+    this._medianMesh = uploadMesh(gl, makeHillPlane(-2, ZFAR, 2, ZNEAR, 0.5, 4, 50, 8, 50));
 
-    // --- Right curb box: x from 5 to 5.3 ---
-    const curbGeoR = makeBox(5.0, 0, ZFAR, 5.3, 0.2, ZNEAR);
-    this._curbRightMesh = uploadMesh(gl, curbGeoR);
+    // --- Outer curbs ---
+    this._curbLeftOuter  = uploadMesh(gl, makeBox(-8.3, 0, ZFAR, -8.0, 0.2, ZNEAR));
+    this._curbRightOuter = uploadMesh(gl, makeBox( 8.0, 0, ZFAR,  8.3, 0.2, ZNEAR));
 
-    // Stripe color: dark reddish (center divider)
-    this._stripeColor = [0.45, 0.28, 0.22, 1.0];
+    // --- Inner curbs (median edges) ---
+    this._curbLeftInner  = uploadMesh(gl, makeBox(-2.3, 0, ZFAR, -2.0, 0.2, ZNEAR));
+    this._curbRightInner = uploadMesh(gl, makeBox( 2.0, 0, ZFAR,  2.3, 0.2, ZNEAR));
   }
 
   render(gl, loc) {
     const id = mat4.create();
 
-    // Road surface
-    drawMesh(gl, loc, this._roadMesh, id, this._brickTex);
+    // Road lanes
+    drawMesh(gl, loc, this._leftLaneMesh,  id, this._brickTex);
+    drawMesh(gl, loc, this._rightLaneMesh, id, this._brickTex);
 
-    // Center stripe (dark reddish color, no texture)
-    drawMesh(gl, loc, this._stripeMesh, id, null, this._stripeColor);
+    // Center median grass
+    drawMesh(gl, loc, this._medianMesh, id, this._grassTex);
 
-    // Curbs (yellow-black stripes texture)
-    drawMesh(gl, loc, this._curbLeftMesh,  id, this._curbTex);
-    drawMesh(gl, loc, this._curbRightMesh, id, this._curbTex);
+    // Outer curbs
+    drawMesh(gl, loc, this._curbLeftOuter,  id, this._curbTex);
+    drawMesh(gl, loc, this._curbRightOuter, id, this._curbTex);
+
+    // Inner curbs (median edges)
+    drawMesh(gl, loc, this._curbLeftInner,  id, this._curbTex);
+    drawMesh(gl, loc, this._curbRightInner, id, this._curbTex);
   }
 }

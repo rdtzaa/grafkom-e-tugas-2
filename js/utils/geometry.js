@@ -54,6 +54,36 @@ export function makeBox(x0, y0, z0, x1, y1, z1) {
   return mergeMeshData([top, sideR, sideL]);
 }
 
+// Tessellated plane with a parabolic hill profile along the x axis.
+// y(x) = peakY * (1 - ((x-cx)/halfW)^2), peakY at center, 0 at both x edges.
+export function makeHillPlane(x0, z0, x1, z1, peakY, uScale, vScale, xSegs, zSegs) {
+  const positions=[], texCoords=[], normals=[], indices=[];
+  const cx = (x0 + x1) / 2;
+  const halfW = (x1 - x0) / 2;
+
+  for (let zi=0; zi<=zSegs; zi++) {
+    const z = z0 + (z1 - z0) * (zi / zSegs);
+    for (let xi=0; xi<=xSegs; xi++) {
+      const x = x0 + (x1 - x0) * (xi / xSegs);
+      const t = halfW !== 0 ? (x - cx) / halfW : 0;
+      const y = peakY * (1 - t * t);
+      const dydx = halfW !== 0 ? peakY * (-2 * t / halfW) : 0;
+      const len = Math.sqrt(dydx * dydx + 1);
+      positions.push(x, y, z);
+      texCoords.push((xi / xSegs) * uScale, (zi / zSegs) * vScale);
+      normals.push(-dydx / len, 1 / len, 0);
+    }
+  }
+
+  for (let zi=0; zi<zSegs; zi++) {
+    for (let xi=0; xi<xSegs; xi++) {
+      const a = zi * (xSegs + 1) + xi;
+      indices.push(a, a + xSegs + 1, a + 1, a + 1, a + xSegs + 1, a + xSegs + 2);
+    }
+  }
+  return { positions, texCoords, normals, indices };
+}
+
 export function mergeMeshData(meshes) {
   const positions=[], texCoords=[], normals=[], indices=[];
   let offset=0;

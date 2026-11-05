@@ -6,7 +6,6 @@ import { Road } from './objects/road.js';
 import { Sidewalk } from './objects/sidewalk.js';
 import { Tree } from './objects/tree.js';
 import { Bush } from './objects/bush.js';
-import { GrassField } from './objects/grass.js';
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('webgl-canvas');
@@ -47,17 +46,23 @@ window.addEventListener('load', () => {
   const road     = new Road(gl);
   const sidewalk = new Sidewalk(gl);
 
-  // Trees — left side (denser, wilder like the reference park area)
+  // Hill height helpers — must match geometry in Ground and Road
+  const _hill = (x, cx, hw, peak) => Math.max(0, peak * (1 - ((x - cx) / hw) ** 2));
+  const medianH    = x => _hill(x, 0, 2, 0.5);
+  const leftParkH  = x => _hill(x, (-35 + -10.5) / 2, (-10.5 - (-35)) / 2, 4.0);
+  const rightParkH = x => _hill(x, (10.5 + 35) / 2,   (35 - 10.5) / 2,     4.0);
+
   const trees = [];
   let seed = 7;
   const rng = () => { seed=(seed*1664525+1013904223)&0xffffffff; return (seed>>>0)/0xffffffff; };
 
   for (let i=0;i<18;i++) {
     const z = -i * 5.5 - 3;
-    // Left trees (further from road, bigger/denser)
+    // Left outer trees — y follows the hill surface
+    const lx = -13 + (rng()-0.5)*3;
     trees.push(new Tree(gl, {
-      x: -10 + (rng()-0.5)*3,
-      y: 0,
+      x: lx,
+      y: leftParkH(lx),
       z: z + (rng()-0.5)*2,
       rotY:  rng()*Math.PI*2,
       scale: 1.1 + rng()*0.7,
@@ -65,11 +70,12 @@ window.addEventListener('load', () => {
       trunkH: 2 + rng()*1.5,
       trunkR: 0.15 + rng()*0.1
     }));
-    // Right trees (more formal, lining the sidewalk)
+    // Right outer trees — y follows the hill surface
     if (i < 15) {
+      const rx = 13 + (rng()-0.5)*1.5;
       trees.push(new Tree(gl, {
-        x: 9.5 + (rng()-0.5)*1.5,
-        y: 0,
+        x: rx,
+        y: rightParkH(rx),
         z: z + (rng()-0.5)*1,
         rotY:  rng()*Math.PI*2,
         scale: 0.9 + rng()*0.5,
@@ -80,21 +86,45 @@ window.addEventListener('load', () => {
     }
   }
 
-  // Bushes scattered on left park side
+  // Median trees — y follows the median hill
+  for (let i=0;i<10;i++) {
+    const z = -i * 10 - 5;
+    const mx = (rng()-0.5)*2.5;
+    trees.push(new Tree(gl, {
+      x: mx,
+      y: medianH(mx),
+      z: z + (rng()-0.5)*3,
+      rotY:  rng()*Math.PI*2,
+      scale: 0.7 + rng()*0.5,
+      type:  rng()>0.3 ? 'round' : 'tall',
+      trunkH: 1.5 + rng()*1,
+      trunkR: 0.1 + rng()*0.06
+    }));
+  }
+
+  // Bushes — outer left side
   const bushes = [];
-  for (let i=0;i<30;i++) {
+  for (let i=0;i<25;i++) {
+    const bx = -11 - rng()*20;
     bushes.push(new Bush(gl, {
-      x: -9 - rng()*20,
-      y: 0,
+      x: bx,
+      y: leftParkH(bx),
       z: -rng()*110 + 10,
       scale: 0.5 + rng()*0.8,
       rotY: rng()*Math.PI*2
     }));
   }
-
-  // Grass fields
-  const grassLeft  = new GrassField(gl, { x0:-35,z0:-110,x1:-8, z1:15,  count:300, side:'left'  });
-  const grassRight = new GrassField(gl, { x0:8,  z0:-110,x1:35, z1:15,  count:150, side:'right' });
+  // Bushes — center median strip
+  for (let i=0;i<15;i++) {
+    const mbx = (rng()-0.5)*2.8;
+    bushes.push(new Bush(gl, {
+      x: mbx,
+      y: medianH(mbx),
+      z: -rng()*110 + 10,
+      scale: 0.3 + rng()*0.4,
+      rotY: rng()*Math.PI*2
+    }));
+  }
 
   // Render loop
   function render() {
@@ -106,14 +136,11 @@ window.addEventListener('load', () => {
     gl.uniformMatrix4fv(loc.u_view,       false, view);
     gl.uniformMatrix4fv(loc.u_projection, false, proj);
 
-    // Draw order: ground → road → sidewalk → trees → bushes → grass (transparent last)
     ground.render(gl, loc);
     road.render(gl, loc);
     sidewalk.render(gl, loc);
     for (const t of trees)  t.render(gl, loc);
     for (const b of bushes) b.render(gl, loc);
-    grassLeft.render(gl, loc);
-    grassRight.render(gl, loc);
 
     requestAnimationFrame(render);
   }

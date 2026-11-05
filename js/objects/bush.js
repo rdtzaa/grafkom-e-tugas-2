@@ -17,10 +17,10 @@ export class Bush {
   }
 
   _buildMesh() {
-    // Simple sphere-ish bush
+    // Sphere bush — center placed at cy=r so the bottom just touches y=0
     const positions=[], texCoords=[], normals=[], indices=[];
-    const hSegs=8, vSegs=5;
-    const r=0.9, cy=0.65;
+    const hSegs=12, vSegs=8;
+    const r=0.9, cy=r+0.05;  // ensure bottom stays above ground after y-scaling
 
     for (let v=0;v<=vSegs;v++) {
       const phi=(v/vSegs)*Math.PI - Math.PI/2;
