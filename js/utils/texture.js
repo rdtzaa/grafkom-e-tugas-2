@@ -140,10 +140,10 @@ export function createBarkTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-export function createLeavesTexture(gl) {
+export function createLeavesTexture(gl, foliageType = 'green') {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
     ctx.fillStyle = '#2d6e2d';
-    ctx.fillRect(0,0,w,h);
+    ctx.fillRect(0, 0, w, h);
     for (let i=0;i<300;i++) {
       const x=Math.random()*w, y=Math.random()*h;
       const r=Math.random()*12+4;
@@ -151,6 +151,23 @@ export function createLeavesTexture(gl) {
       ctx.beginPath();
       ctx.ellipse(x,y,r,r*0.6,Math.random()*Math.PI,0,Math.PI*2);
       ctx.fill();
+    }
+    if (foliageType === 'green-white') {
+      for (let i=0;i<90;i++) {
+        const x=Math.random()*w, y=Math.random()*h, r=Math.random()*7+3;
+        ctx.globalAlpha = 0.65+Math.random()*0.3;
+        ctx.fillStyle = `hsl(60,${20+Math.random()*20}%,${80+Math.random()*15}%)`;
+        ctx.beginPath(); ctx.ellipse(x,y,r,r*0.7,Math.random()*Math.PI,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    } else if (foliageType === 'green-pink') {
+      for (let i=0;i<90;i++) {
+        const x=Math.random()*w, y=Math.random()*h, r=Math.random()*7+3;
+        ctx.globalAlpha = 0.65+Math.random()*0.3;
+        ctx.fillStyle = `hsl(${330+Math.random()*30},${60+Math.random()*20}%,${65+Math.random()*20}%)`;
+        ctx.beginPath(); ctx.ellipse(x,y,r,r*0.7,Math.random()*Math.PI,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
     }
   });
   return _uploadCanvasTexture(gl, c);

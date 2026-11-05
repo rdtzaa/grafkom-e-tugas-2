@@ -60,6 +60,7 @@ window.addEventListener('load', () => {
     const z = -i * 5.5 - 3;
     // Left outer trees — y follows the hill surface
     const lx = -13 + (rng()-0.5)*3;
+    const lftv = rng();
     trees.push(new Tree(gl, {
       x: lx,
       y: leftParkH(lx),
@@ -68,11 +69,13 @@ window.addEventListener('load', () => {
       scale: 1.1 + rng()*0.7,
       type:  rng()>0.4 ? 'round' : 'tall',
       trunkH: 2 + rng()*1.5,
-      trunkR: 0.15 + rng()*0.1
+      trunkR: 0.15 + rng()*0.1,
+      foliageType: lftv < 0.4 ? 'green' : lftv < 0.7 ? 'green-white' : 'green-pink'
     }));
     // Right outer trees — y follows the hill surface
     if (i < 15) {
       const rx = 13 + (rng()-0.5)*1.5;
+      const rftv = rng();
       trees.push(new Tree(gl, {
         x: rx,
         y: rightParkH(rx),
@@ -81,7 +84,8 @@ window.addEventListener('load', () => {
         scale: 0.9 + rng()*0.5,
         type:  rng()>0.3 ? 'round' : 'tall',
         trunkH: 2.5 + rng()*1,
-        trunkR: 0.12 + rng()*0.08
+        trunkR: 0.12 + rng()*0.08,
+        foliageType: rftv < 0.4 ? 'green' : rftv < 0.7 ? 'green-white' : 'green-pink'
       }));
     }
   }
@@ -90,6 +94,7 @@ window.addEventListener('load', () => {
   for (let i=0;i<10;i++) {
     const z = -i * 10 - 5;
     const mx = (rng()-0.5)*2.5;
+    const mftv = rng();
     trees.push(new Tree(gl, {
       x: mx,
       y: medianH(mx),
@@ -98,7 +103,8 @@ window.addEventListener('load', () => {
       scale: 0.7 + rng()*0.5,
       type:  rng()>0.3 ? 'round' : 'tall',
       trunkH: 1.5 + rng()*1,
-      trunkR: 0.1 + rng()*0.06
+      trunkR: 0.1 + rng()*0.06,
+      foliageType: mftv < 0.6 ? 'green' : 'green-white'
     }));
   }
 
