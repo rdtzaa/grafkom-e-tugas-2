@@ -20,8 +20,8 @@ function _makeCanvas(w, h, fn) {
 export function createBrickTexture(gl) {
   const c = _makeCanvas(512, 512, (ctx, w, h) => {
     const BW=64, BH=32;
-    const mortar='#9a8878';
-    const bricks=['#8B6355','#9A7060','#7A5245','#8C6450','#956655','#7F5040','#B07060'];
+    const mortar='#696969';
+    const bricks=['#5c5452','#585050','#494949','#554b46','#505050','#474040','#bebebe'];
 
     ctx.fillStyle = mortar;
     ctx.fillRect(0, 0, w, h);

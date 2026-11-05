@@ -49,8 +49,8 @@ window.addEventListener('load', () => {
   // Hill height helpers — must match geometry in Ground and Road
   const _hill = (x, cx, hw, peak) => Math.max(0, peak * (1 - ((x - cx) / hw) ** 2));
   const medianH    = x => _hill(x, 0, 2, 0.5);
-  const leftParkH  = x => _hill(x, (-35 + -10.5) / 2, (-10.5 - (-35)) / 2, 4.0);
-  const rightParkH = x => _hill(x, (10.5 + 35) / 2,   (35 - 10.5) / 2,     4.0);
+  const leftParkH  = x => _hill(x, (-35 + -5.5) / 2, (-5.5 - (-35)) / 2, 2.0);
+  const rightParkH = x => _hill(x, (5.5 + 35) / 2,   (35 - 5.5) / 2,     2.0);
 
   const trees = [];
   let seed = 7;
@@ -59,7 +59,7 @@ window.addEventListener('load', () => {
   for (let i=0;i<18;i++) {
     const z = -i * 5.5 - 3;
     // Left outer trees — y follows the hill surface
-    const lx = -13 + (rng()-0.5)*3;
+    const lx = -15 + (rng()-0.5)*3;
     const lftv = rng();
     trees.push(new Tree(gl, {
       x: lx,
@@ -74,7 +74,7 @@ window.addEventListener('load', () => {
     }));
     // Right outer trees — y follows the hill surface
     if (i < 15) {
-      const rx = 13 + (rng()-0.5)*1.5;
+      const rx = 15 + (rng()-0.5)*1.5;
       const rftv = rng();
       trees.push(new Tree(gl, {
         x: rx,
@@ -111,7 +111,7 @@ window.addEventListener('load', () => {
   // Bushes — outer left side
   const bushes = [];
   for (let i=0;i<25;i++) {
-    const bx = -11 - rng()*20;
+    const bx = -10 - rng()*10;
     bushes.push(new Bush(gl, {
       x: bx,
       y: leftParkH(bx),
@@ -128,6 +128,16 @@ window.addEventListener('load', () => {
       y: medianH(mbx),
       z: -rng()*110 + 10,
       scale: 0.3 + rng()*0.4,
+      rotY: rng()*Math.PI*2
+    }));
+  }
+  for (let i=0;i<25;i++) {
+    const bx = 10 + rng()*10;
+    bushes.push(new Bush(gl, {
+      x: bx,
+      y: rightParkH(bx),
+      z: -rng()*110 + 10,
+      scale: 0.5 + rng()*0.8,
       rotY: rng()*Math.PI*2
     }));
   }
