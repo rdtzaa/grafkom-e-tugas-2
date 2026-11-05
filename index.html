@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tugas 2 Grafkom - Scene ITS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header>
     <h1>Tugas 2: Scene Area ITS</h1>
-    <p class="subtitle">WebGL 3D Scene — Jalan di Lingkungan ITS</p>
+    <p class="subtitle">WebGL 3D Scene - Jalan di Lingkungan ITS</p>
     <div class="group-info">
       <span>Kelompok: <strong>[Nama Kelompok]</strong></span>
       <span>Anggota: <strong>[Nama 1]</strong> &amp; <strong>[Nama 2]</strong></span>
@@ -25,27 +28,11 @@
       <section class="panel">
         <h2>Simulasi WebGL</h2>
         <canvas id="webgl-canvas"></canvas>
-        <div class="controls-hint">Drag to orbit &bull; Scroll to zoom</div>
+        <div class="controls-hint">Drag to orbit - Scroll to zoom</div>
       </section>
     </div>
   </main>
 
-  <!-- Utils -->
-  <script src="js/utils/math.js"></script>
-  <script src="js/utils/texture.js"></script>
-  <script src="js/utils/geometry.js"></script>
-  <!-- Core -->
-  <script src="js/shaders.js"></script>
-  <script src="js/renderer.js"></script>
-  <script src="js/camera.js"></script>
-  <!-- Objects -->
-  <script src="js/objects/ground.js"></script>
-  <script src="js/objects/road.js"></script>
-  <script src="js/objects/sidewalk.js"></script>
-  <script src="js/objects/tree.js"></script>
-  <script src="js/objects/bush.js"></script>
-  <script src="js/objects/grass.js"></script>
-  <!-- Entry point -->
-  <script src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

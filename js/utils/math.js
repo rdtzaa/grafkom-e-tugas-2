@@ -1,6 +1,5 @@
-'use strict';
 // Column-major 4x4 matrix library (matches WebGL / GLSL convention)
-const mat4 = {
+export const mat4 = {
   create() {
     return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
   },

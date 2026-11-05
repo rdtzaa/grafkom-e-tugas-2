@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #1a1a2e;
-  color: #e0e0e0;
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: #ffffff;
+  color: #000000;
   min-height: 100vh;
 }
 
 header {
   padding: 1.5rem 2rem;
-  background: #16213e;
-  border-bottom: 2px solid #0f3460;
+  background: #f5f5f5;
+  border-bottom: 2px solid #e0e0e0;
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -19,11 +19,11 @@ header {
 
 header h1 {
   font-size: 1.4rem;
-  color: #e94560;
+  color: #000000;
 }
 
 .subtitle {
-  color: #a0a0b0;
+  color: #000000;
   font-size: 0.9rem;
 }
 
@@ -32,7 +32,7 @@ header h1 {
   display: flex;
   gap: 1.5rem;
   font-size: 0.9rem;
-  color: #c0c0d0;
+  color: #000000;
 }
 
 main { padding: 1.5rem 2rem; }
@@ -50,18 +50,18 @@ main { padding: 1.5rem 2rem; }
 }
 
 .panel {
-  background: #16213e;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #0f3460;
+  border: 1px solid #e0e0e0;
 }
 
 .panel h2 {
   padding: 0.75rem 1rem;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #a0c4ff;
-  background: #0f3460;
+  color: #000000;
+  background: #f5f5f5;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -85,7 +85,7 @@ main { padding: 1.5rem 2rem; }
 .controls-hint {
   padding: 0.4rem 1rem;
   font-size: 0.75rem;
-  color: #606080;
+  color: #000000;
   text-align: center;
-  background: #0d1b35;
+  background: #f5f5f5;
 }

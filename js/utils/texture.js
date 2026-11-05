@@ -1,5 +1,3 @@
-'use strict';
-
 function _uploadCanvasTexture(gl, canvas) {
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -19,7 +17,7 @@ function _makeCanvas(w, h, fn) {
   return c;
 }
 
-function createBrickTexture(gl) {
+export function createBrickTexture(gl) {
   const c = _makeCanvas(512, 512, (ctx, w, h) => {
     const BW=64, BH=32;
     const mortar='#9a8878';
@@ -46,7 +44,7 @@ function createBrickTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createConcreteTexture(gl) {
+export function createConcreteTexture(gl) {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
     ctx.fillStyle = '#c4bdb0';
     ctx.fillRect(0, 0, w, h);
@@ -67,7 +65,7 @@ function createConcreteTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createGrassTexture(gl) {
+export function createGrassTexture(gl) {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
     ctx.fillStyle = '#6b8c3a';
     ctx.fillRect(0, 0, w, h);
@@ -87,7 +85,7 @@ function createGrassTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createDryGrassTexture(gl) {
+export function createDryGrassTexture(gl) {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
     ctx.fillStyle = '#a09050';
     ctx.fillRect(0, 0, w, h);
@@ -105,7 +103,7 @@ function createDryGrassTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createCurbTexture(gl) {
+export function createCurbTexture(gl) {
   const c = _makeCanvas(256, 64, (ctx, w, h) => {
     // yellow base
     ctx.fillStyle = '#E8C800';
@@ -125,7 +123,7 @@ function createCurbTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createBarkTexture(gl) {
+export function createBarkTexture(gl) {
   const c = _makeCanvas(128, 256, (ctx, w, h) => {
     ctx.fillStyle = '#6b4e30';
     ctx.fillRect(0,0,w,h);
@@ -142,7 +140,7 @@ function createBarkTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createLeavesTexture(gl) {
+export function createLeavesTexture(gl) {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
     ctx.fillStyle = '#2d6e2d';
     ctx.fillRect(0,0,w,h);
@@ -158,7 +156,7 @@ function createLeavesTexture(gl) {
   return _uploadCanvasTexture(gl, c);
 }
 
-function createSolidColorTexture(gl, r, g, b, a=255) {
+export function createSolidColorTexture(gl, r, g, b, a=255) {
   const c = _makeCanvas(2, 2, (ctx) => {
     ctx.fillStyle = `rgba(${r},${g},${b},${a/255})`;
     ctx.fillRect(0,0,2,2);

@@ -1,4 +1,12 @@
-'use strict';
+import { initGL, createProgram, getLocations } from './renderer.js';
+import { VERT_SRC, FRAG_SRC } from './shaders.js';
+import { Camera } from './camera.js';
+import { Ground } from './objects/ground.js';
+import { Road } from './objects/road.js';
+import { Sidewalk } from './objects/sidewalk.js';
+import { Tree } from './objects/tree.js';
+import { Bush } from './objects/bush.js';
+import { GrassField } from './objects/grass.js';
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('webgl-canvas');

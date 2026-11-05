@@ -1,7 +1,9 @@
-'use strict';
+import { mat4 } from '../utils/math.js';
+import { uploadMesh, drawMesh } from '../renderer.js';
+import { createGrassTexture, createDryGrassTexture } from '../utils/texture.js';
 
 // Wild grass patches — simple vertical quads scattered in an area
-class GrassField {
+export class GrassField {
   constructor(gl, params = {}) {
     this._gl = gl;
     const { x0=-35, z0=-110, x1=-8, z1=15, count=200, side='left' } = params;

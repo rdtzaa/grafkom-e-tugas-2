@@ -1,6 +1,8 @@
-'use strict';
+import { mat4 } from '../utils/math.js';
+import { uploadMesh, drawMesh } from '../renderer.js';
+import { createLeavesTexture } from '../utils/texture.js';
 
-class Bush {
+export class Bush {
   constructor(gl, params = {}) {
     this._gl = gl;
     const { x=0, y=0, z=0, scale=1, rotY=0 } = params;

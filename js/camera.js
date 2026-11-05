@@ -1,6 +1,6 @@
-'use strict';
+import { mat4 } from './utils/math.js';
 
-class Camera {
+export class Camera {
   constructor(canvas) {
     // Start at "walking down the road" viewpoint
     this._center = [0, 1.0, -40];

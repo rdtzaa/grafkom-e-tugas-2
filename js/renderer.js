@@ -1,6 +1,6 @@
-'use strict';
+import { mat4 } from './utils/math.js';
 
-function initGL(canvas) {
+export function initGL(canvas) {
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   if (!gl) { alert('WebGL not supported in this browser.'); return null; }
   gl.enable(gl.DEPTH_TEST);
@@ -9,7 +9,7 @@ function initGL(canvas) {
   return gl;
 }
 
-function compileShader(gl, type, src) {
+export function compileShader(gl, type, src) {
   const s = gl.createShader(type);
   gl.shaderSource(s, src);
   gl.compileShader(s);
@@ -21,7 +21,7 @@ function compileShader(gl, type, src) {
   return s;
 }
 
-function createProgram(gl, vertSrc, fragSrc) {
+export function createProgram(gl, vertSrc, fragSrc) {
   const v = compileShader(gl, gl.VERTEX_SHADER, vertSrc);
   const f = compileShader(gl, gl.FRAGMENT_SHADER, fragSrc);
   const p = gl.createProgram();
@@ -34,7 +34,7 @@ function createProgram(gl, vertSrc, fragSrc) {
   return p;
 }
 
-function getLocations(gl, program) {
+export function getLocations(gl, program) {
   return {
     // attributes
     a_position:    gl.getAttribLocation(program, 'a_position'),
@@ -54,7 +54,7 @@ function getLocations(gl, program) {
   };
 }
 
-function uploadMesh(gl, geo) {
+export function uploadMesh(gl, geo) {
   function vbo(data) {
     const b = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, b);
@@ -76,7 +76,7 @@ function uploadMesh(gl, geo) {
   };
 }
 
-function drawMesh(gl, loc, mesh, modelMatrix, texture, color) {
+export function drawMesh(gl, loc, mesh, modelMatrix, texture, color) {
   gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuf);
   gl.enableVertexAttribArray(loc.a_position);
   gl.vertexAttribPointer(loc.a_position, 3, gl.FLOAT, false, 0, 0);

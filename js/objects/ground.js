@@ -1,7 +1,10 @@
-'use strict';
-// Large ground planes on each side of the road (grass/dirt)
+import { mat4 } from '../utils/math.js';
+import { uploadMesh, drawMesh } from '../renderer.js';
+import { createGrassTexture, createDryGrassTexture } from '../utils/texture.js';
+import { makePlane } from '../utils/geometry.js';
 
-class Ground {
+// Large ground planes on each side of the road (grass/dirt)
+export class Ground {
   constructor(gl) {
     this._gl = gl;
     this._grassTex = createGrassTexture(gl);

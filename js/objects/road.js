@@ -1,6 +1,9 @@
-'use strict';
+import { mat4 } from '../utils/math.js';
+import { uploadMesh, drawMesh } from '../renderer.js';
+import { createBrickTexture, createConcreteTexture, createCurbTexture } from '../utils/texture.js';
+import { makePlane, makeBox } from '../utils/geometry.js';
 
-class Road {
+export class Road {
   constructor(gl) {
     this._gl = gl;
 

@@ -1,7 +1,9 @@
-'use strict';
+import { mat4 } from '../utils/math.js';
+import { uploadMesh, drawMesh } from '../renderer.js';
+import { createBarkTexture, createLeavesTexture } from '../utils/texture.js';
 
 // Hierarchical tree: trunk (cylinder-approx) + foliage (sphere-approx using stacked rings)
-class Tree {
+export class Tree {
   constructor(gl, params = {}) {
     this._gl = gl;
     const {

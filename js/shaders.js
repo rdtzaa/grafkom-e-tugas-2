@@ -1,6 +1,4 @@
-'use strict';
-
-const VERT_SRC = `
+export const VERT_SRC = `
 attribute vec3 a_position;
 attribute vec2 a_texCoord;
 attribute vec3 a_normal;
@@ -23,7 +21,7 @@ void main() {
 }
 `;
 
-const FRAG_SRC = `
+export const FRAG_SRC = `
 precision mediump float;
 
 varying vec2 v_texCoord;
