@@ -1,37 +1,51 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tugas 2 Grafkom - Scene ITS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Tugas 2: Scene Area ITS</h1>
-    <p class="subtitle">WebGL 3D Scene - Jalan di Lingkungan ITS</p>
-    <div class="group-info">
-      <span>Anggota: <strong>Riyan Fadli - 5025241068</strong> &amp; <strong>Raditya Zhafran - 5025241120</strong></span>
-    </div>
-  </header>
-
   <main>
     <div class="compare-wrapper">
       <section class="panel">
         <h2>Foto Referensi</h2>
-        <img src="gambar_referensi.jpeg" alt="Referensi objek asli ITS" class="ref-img">
+        <img src="gambar_referensi.jpeg" alt="Referensi jalan di ITS dengan trotoar dan pembatas kuning-hitam" class="ref-img">
       </section>
       <section class="panel">
         <h2>Simulasi WebGL</h2>
-        <canvas id="webgl-canvas"></canvas>
-        <div class="controls-hint">Drag to orbit - Scroll to zoom</div>
+        <canvas id="webgl-canvas" aria-label="Jalan kampus, saluran air, dan perumahan dosen dengan satu gerbang"></canvas>
+        <p class="controls-hint">Geser untuk orbit · Scroll / cubit untuk zoom</p>
+        <details class="scene-controls">
+          <summary>Kontrol scene</summary>
+          <div class="control-row">
+            <label for="camera-view">Kamera</label>
+            <select id="camera-view">
+              <option value="overview">Kawasan kampus</option>
+              <option value="road">Dari jalan</option>
+              <option value="housing">Perumahan dosen</option>
+              <option value="entrance">Gerbang dan saluran air</option>
+            </select>
+            <button id="reset-view" type="button">Reset</button>
+          </div>
+          <div class="control-row">
+            <label for="time-of-day">Waktu: <output id="time-label" for="time-of-day">Siang</output></label>
+            <input id="time-of-day" type="range" min="0" max="100" value="15" aria-label="Waktu dari siang ke senja">
+            <span>Senja</span>
+          </div>
+          <div class="control-row options">
+            <label><input type="checkbox" id="street-lights" checked> Lampu jalan</label>
+            <label><input type="checkbox" id="animate" checked> Animasi</label>
+            <button type="button" id="toggle-gates" aria-pressed="false">Buka gerbang utama</button>
+          </div>
+        </details>
+        <p id="scene-status" class="scene-status" role="status">Memuat WebGL…</p>
+        <noscript>Aktifkan JavaScript untuk menjalankan simulasi.</noscript>
       </section>
     </div>
   </main>
-
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

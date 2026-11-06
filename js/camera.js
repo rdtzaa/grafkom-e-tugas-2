@@ -2,11 +2,11 @@ import { mat4 } from './utils/math.js';
 
 export class Camera {
   constructor(canvas) {
-    // Start at "walking down the road" viewpoint
-    this._center = [0, 1.0, -40];
-    this._theta  = Math.PI;   // azimuth: looking in -Z direction
-    this._phi    = -0.05;     // very slight downward tilt
-    this._radius = 50;        // distance from center
+    // Elevated overview shows the canal and the single residential crossing.
+    this._center = [-14, 1.0, -36];
+    this._theta  = 0.38;
+    this._phi    = 0.42;
+    this._radius = 68;
 
     this.up   = [0, 1, 0];
     this.fov  = 55 * Math.PI / 180;
@@ -17,6 +17,18 @@ export class Camera {
     this.eye = [0, 0, 0];
     this._updateEye();
     this._bindEvents(canvas);
+  }
+
+  setPreset(name) {
+    const presets = {
+      overview: { center: [-14,1,-36], theta: 0.38, phi: 0.42, radius: 68 },
+      road: { center: [-5.1,1.7,-36], theta: 0, phi: 0.025, radius: 46 },
+      housing: { center: [-27,1.5,-24], theta: 1.05, phi: 0.5, radius: 43 },
+      entrance: { center: [-18,1,-12], theta: 0.85, phi: 0.55, radius: 30 },
+    };
+    const p = presets[name] || presets.overview;
+    this._center = [...p.center]; this._theta = p.theta; this._phi = p.phi; this._radius = p.radius;
+    this._updateEye();
   }
 
   _updateEye() {
@@ -36,7 +48,7 @@ export class Camera {
     window.addEventListener('mousemove', e => {
       if (!dragging) return;
       this._theta -= (e.clientX-lx)*0.004;
-      this._phi    = Math.max(-1.4, Math.min(1.4, this._phi-(e.clientY-ly)*0.004));
+      this._phi    = Math.max(0.025, Math.min(1.4, this._phi-(e.clientY-ly)*0.004));
       lx=e.clientX; ly=e.clientY;
       this._updateEye();
     });
@@ -55,7 +67,7 @@ export class Camera {
         const dx=e.touches[0].clientX-touches[0].clientX;
         const dy=e.touches[0].clientY-touches[0].clientY;
         this._theta -= dx*0.004;
-        this._phi    = Math.max(-1.4, Math.min(1.4, this._phi-dy*0.004));
+        this._phi    = Math.max(0.025, Math.min(1.4, this._phi-dy*0.004));
         this._updateEye();
       } else if (e.touches.length===2) {
         const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);

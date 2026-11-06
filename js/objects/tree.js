@@ -2,6 +2,7 @@ import { mat4 } from '../utils/math.js';
 import { uploadMesh, drawMesh } from '../renderer.js';
 import { createBarkTexture, createLeavesTexture } from '../utils/texture.js';
 import { mergeMeshData } from '../utils/geometry.js';
+import { makeBlossoms, blossomColors } from './blossoms.js';
 
 export class Tree {
   constructor(gl, params = {}) {
@@ -15,6 +16,9 @@ export class Tree {
       trunkR      = 0.18,
       foliageType = 'green'
     } = params;
+    this.position = [x,y,z];
+    this.scale = scale;
+    this.foliageType = foliageType;
 
     this._model = mat4.multiply(
       mat4.fromTranslation(x, y, z),
@@ -27,6 +31,10 @@ export class Tree {
     this._trunkMesh   = this._buildTrunk(trunkR, trunkH);
     this._branchMesh  = this._buildBranches(trunkR, trunkH, type);
     this._foliageMesh = this._buildFoliage(type, trunkH);
+    this._flowerMeshes = ['pink','green-pink'].includes(foliageType)
+      ? makeBlossoms(this._foliageClusters(type,trunkH),
+        Math.abs(Math.round(x*311+z*173))+1,foliageType==='pink').map(geo=>uploadMesh(gl,geo))
+      : [];
   }
 
   // Sphere geometry centered at (cx,cy,cz) with XZ radius rx, Y radius ry
@@ -47,7 +55,7 @@ export class Tree {
     for (let v=0; v<vS; v++) {
       for (let h=0; h<hS; h++) {
         const a=v*(hS+1)+h;
-        idx.push(a, a+1, a+hS+2, a, a+hS+2, a+hS+1);
+        idx.push(a, a+hS+2, a+1, a, a+hS+1, a+hS+2);
       }
     }
     return {positions:pos, texCoords:uv, normals:norm, indices:idx};
@@ -122,30 +130,34 @@ export class Tree {
     return geos.length > 0 ? uploadMesh(this._gl, mergeMeshData(geos)) : null;
   }
 
-  _buildFoliage(type, trunkH) {
+  _foliageClusters(type, trunkH) {
     const isRound = type==='round';
     const rx     = isRound ? 1.4 : 0.9;
     const ry     = isRound ? 1.2 : 1.9;
     const spread = isRound ? 2.5 : 1.6;
     const baseY  = trunkH + (isRound ? 1.5 : 2.2);
     const num    = isRound ? 5 : 4;
-    const geos   = [];
+    const clusters = [];
     // Centre-top cluster
-    geos.push(this._sphereGeo(0, baseY + ry*0.3, 0, rx, ry*0.9));
+    clusters.push({x:0,y:baseY+ry*0.3,z:0,rx,ry:ry*0.9});
     // Outer clusters at branch tips
     for (let i=0; i<num; i++) {
       const angle = (i/num)*Math.PI*2 + 0.4;
-      geos.push(this._sphereGeo(
-        Math.cos(angle)*spread, baseY - ry*0.2, Math.sin(angle)*spread,
-        rx*0.75, ry*0.7
-      ));
+      clusters.push({x:Math.cos(angle)*spread,y:baseY-ry*0.2,z:Math.sin(angle)*spread,
+        rx:rx*0.75,ry:ry*0.7});
     }
-    return uploadMesh(this._gl, mergeMeshData(geos));
+    return clusters;
+  }
+
+  _buildFoliage(type,trunkH) {
+    return uploadMesh(this._gl,mergeMeshData(this._foliageClusters(type,trunkH)
+      .map(c=>this._sphereGeo(c.x,c.y,c.z,c.rx,c.ry))));
   }
 
   render(gl, loc) {
     drawMesh(gl, loc, this._trunkMesh,   this._model, this._barkTex);
     if (this._branchMesh) drawMesh(gl, loc, this._branchMesh, this._model, this._barkTex);
     drawMesh(gl, loc, this._foliageMesh, this._model, this._leavesTex);
+    this._flowerMeshes.forEach((mesh,i)=>drawMesh(gl,loc,mesh,this._model,null,blossomColors[i]));
   }
 }

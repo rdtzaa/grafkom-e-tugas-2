@@ -24,6 +24,7 @@ export function compileShader(gl, type, src) {
 export function createProgram(gl, vertSrc, fragSrc) {
   const v = compileShader(gl, gl.VERTEX_SHADER, vertSrc);
   const f = compileShader(gl, gl.FRAGMENT_SHADER, fragSrc);
+  if (!v || !f) return null;
   const p = gl.createProgram();
   gl.attachShader(p, v); gl.attachShader(p, f);
   gl.linkProgram(p);
@@ -51,6 +52,11 @@ export function getLocations(gl, program) {
     u_ambient:     gl.getUniformLocation(program, 'u_ambient'),
     u_useTexture:  gl.getUniformLocation(program, 'u_useTexture'),
     u_color:       gl.getUniformLocation(program, 'u_color'),
+    u_eye:         gl.getUniformLocation(program, 'u_eye'),
+    u_fogColor:    gl.getUniformLocation(program, 'u_fogColor'),
+    u_lampPositions: gl.getUniformLocation(program, 'u_lampPositions[0]'),
+    u_lampStrength: gl.getUniformLocation(program, 'u_lampStrength'),
+    u_emissive:    gl.getUniformLocation(program, 'u_emissive'),
   };
 }
 
@@ -76,7 +82,7 @@ export function uploadMesh(gl, geo) {
   };
 }
 
-export function drawMesh(gl, loc, mesh, modelMatrix, texture, color) {
+export function drawMesh(gl, loc, mesh, modelMatrix, texture, color, emissive = 0) {
   gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuf);
   gl.enableVertexAttribArray(loc.a_position);
   gl.vertexAttribPointer(loc.a_position, 3, gl.FLOAT, false, 0, 0);
@@ -91,6 +97,8 @@ export function drawMesh(gl, loc, mesh, modelMatrix, texture, color) {
 
   gl.uniformMatrix4fv(loc.u_model, false, modelMatrix);
   gl.uniformMatrix3fv(loc.u_normalMatrix, false, mat4.normalMatrix(modelMatrix));
+  gl.uniform4fv(loc.u_color, color || [1,1,1,1]);
+  gl.uniform1f(loc.u_emissive, emissive);
 
   if (texture) {
     gl.uniform1i(loc.u_useTexture, 1);

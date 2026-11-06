@@ -27,7 +27,7 @@ export function makeVertQuadX(x, y0, z0, y1, z1, uScale, vScale) {
     positions: [x,y0,z0, x,y0,z1, x,y1,z1, x,y1,z0],
     texCoords: [0,0, uScale,0, uScale,vScale, 0,vScale],
     normals: [1,0,0, 1,0,0, 1,0,0, 1,0,0],
-    indices: [0,1,2, 0,2,3]
+    indices: [0,2,1, 0,3,2]
   };
 }
 
@@ -37,7 +37,7 @@ export function makeVertQuadNegX(x, y0, z0, y1, z1, uScale, vScale) {
     positions: [x,y0,z1, x,y0,z0, x,y1,z0, x,y1,z1],
     texCoords: [0,0, uScale,0, uScale,vScale, 0,vScale],
     normals: [-1,0,0, -1,0,0, -1,0,0, -1,0,0],
-    indices: [0,1,2, 0,2,3]
+    indices: [0,2,1, 0,3,2]
   };
 }
 

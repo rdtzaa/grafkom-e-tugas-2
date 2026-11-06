@@ -80,8 +80,13 @@ export const mat4 = {
     return mat4.multiply(m, mat4.fromRotationY(a));
   },
 
-  // Upper-left 3x3 for normal transform (assumes uniform scale or pure rotation)
+  // Inverse transpose: normals stay correct for non-uniformly scaled houses/poles.
   normalMatrix(m) {
-    return new Float32Array([m[0],m[1],m[2], m[4],m[5],m[6], m[8],m[9],m[10]]);
+    const a = [m[0], m[1], m[2]], b = [m[4], m[5], m[6]], c = [m[8], m[9], m[10]];
+    const cross = (u,v) => [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]];
+    const bc = cross(b,c), ca = cross(c,a), ab = cross(a,b);
+    const det = a[0]*bc[0] + a[1]*bc[1] + a[2]*bc[2];
+    if (Math.abs(det) < 1e-10) return new Float32Array([1,0,0,0,1,0,0,0,1]);
+    return new Float32Array([...bc, ...ca, ...ab].map(v => v / det));
   }
 };

@@ -142,6 +142,24 @@ export function createBarkTexture(gl) {
 
 export function createLeavesTexture(gl, foliageType = 'green') {
   const c = _makeCanvas(256, 256, (ctx, w, h) => {
+    if (foliageType === 'pink') {
+      // A blooming tabebuya canopy is mainly pink; small leaf patches remain.
+      ctx.fillStyle = '#c86b95'; ctx.fillRect(0,0,w,h);
+      for(let i=0;i<50;i++) {
+        ctx.fillStyle = '#64864b';
+        ctx.beginPath(); ctx.ellipse(Math.random()*w,Math.random()*h,5,3,Math.random()*Math.PI,0,Math.PI*2); ctx.fill();
+      }
+      for(let i=0;i<420;i++) {
+        const x=Math.random()*w,y=Math.random()*h,r=3+Math.random()*5;
+        ctx.fillStyle=`hsl(${327+Math.random()*14},${55+Math.random()*20}%,${68+Math.random()*19}%)`;
+        for(let p=0;p<5;p++) {
+          const angle=p*Math.PI*2/5;
+          ctx.beginPath();ctx.ellipse(x+Math.cos(angle)*r*0.5,y+Math.sin(angle)*r*0.5,r*0.6,r*0.42,angle,0,Math.PI*2);ctx.fill();
+        }
+        ctx.fillStyle='#f8dcb8';ctx.beginPath();ctx.arc(x,y,r*0.15,0,Math.PI*2);ctx.fill();
+      }
+      return;
+    }
     ctx.fillStyle = '#2d6e2d';
     ctx.fillRect(0, 0, w, h);
     for (let i=0;i<300;i++) {
