@@ -1,34 +1,8 @@
-/* =====================================================================
- * helper_function.js — Tugas 2 Grafika Komputer (WebGL2)
- * Scene: jalan paving di sekitar ITS (jalan, curb kuning-hitam, rumput,
- *        pohon, lampu jalan, rambu 30, mobil, langit).
- *
- * Isi file (urut dari dasar ke atas):
- *   1. WebGL dasar      : setupGL, createShader, createProgram, uniform locs
- *   2. Matematika       : dipisah ke math3d.js (Vec3, Mat4, normalMatrixFromMat4)
- *   3. Mesh & Geometry  : createMesh, drawMesh, box/plane/cylinder/sphere
- *   4. Texture prosedural (canvas 2D) : paving, curb, rumput, daun, langit...
- *   5. Shader standar   : Blinn-Phong + texture + fog (siap pakai)
- *   6. Hierarchical     : SceneNode (parent-child), find, toTreeString
- *   7. Camera           : first-person camera + kontrol keyboard/mouse
- *   8. Animasi          : loop, lerp, pingPong, wrap
- *   9. Render scene     : renderScene (sky + tree)
- *
- * Konvensi: right-handed, Y ke atas, Mat4 dari math3d.js (multiply(a,b) = a dulu, lalu b).
- * Jalan membentang di sumbu -Z, kamera default di (0, 1.6, 8) melihat ke -Z.
- * File ini dipakai sebagai ES Module:
- *   <script type="module" src="main.js"></script>
- *   import { ... } from "./helper_function.js";
- * ===================================================================== */
+
 
 import { Vec3, Mat4, degToRad, normalMatrixFromMat4 } from "./math3d.js";
 
-// Re-export supaya main.js cukup import dari satu tempat
 export { Vec3, Mat4, degToRad, normalMatrixFromMat4 };
-
-/* =====================================================================
- * 1. WEBGL DASAR
- * ===================================================================== */
 
 /** Ambil WebGL2 context + state default (depth test, warna clear). */
 export function setupGL(canvas, clearColor = [0.81, 0.9, 0.97, 1]) {
@@ -310,7 +284,7 @@ export function canvasToTexture(gl, source, { repeat = true, mipmap = true } = {
   if (mipmap) {
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    // Penting untuk jalan yang dilihat miring (grazing angle) agar tidak blur
+
     const ext = gl.getExtension("EXT_texture_filter_anisotropic");
     if (ext) {
       const max = gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
@@ -544,7 +518,7 @@ void main() {
   if (u_unlit > 0.5) { outColor = vec4(albedo, 1.0); return; }
 
   vec3 N = normalize(v_normal);
-  if (!gl_FrontFacing) N = -N;                 // aman untuk bidang tipis/2 sisi
+  if (!gl_FrontFacing) N = -N;                 
   vec3 V = normalize(u_cameraPos - v_worldPos);
 
   // Matahari (directional)
@@ -569,7 +543,6 @@ void main() {
 
   vec3 color = albedo * light + specCol;
 
-  // Fog eksponensial: jarak jauh jadi pucat/berkabut seperti di foto
   float d = length(u_cameraPos - v_worldPos);
   float fog = 1.0 - exp(-pow(d * u_fogDensity, 2.0));
   outColor = vec4(mix(color, u_fogColor, clamp(fog, 0.0, 1.0)), 1.0);

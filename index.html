@@ -9,6 +9,10 @@
 </head>
 <body>
   <main>
+    <div class="group-info">
+      <p>Riyan Fadli - 5025241068</p>
+      <p>Raditya Zhafran - 5025241120</p>
+    </div>
     <div class="compare-wrapper">
       <section class="panel">
         <h2>Foto Referensi</h2>
@@ -43,6 +47,32 @@
         </details>
         <p id="scene-status" class="scene-status" role="status">Memuat WebGL…</p>
         <noscript>Aktifkan JavaScript untuk menjalankan simulasi.</noscript>
+      </section>
+    </div>
+    <div class="reference-details">
+      <section class="panel">
+        <h2>Video Referensi</h2>
+        <video class="ref-video" controls preload="metadata" playsinline aria-label="Video referensi area jalan kampus ITS">
+          <source src="video_referensi.mp4" type="video/mp4">
+          Browser tidak mendukung pemutar video. <a href="video_referensi.mp4">Buka video referensi</a>.
+        </video>
+      </section>
+      <section class="panel" aria-labelledby="tree-heading">
+        <h2 id="tree-heading">Desain Tree Hubungan Antarobjek</h2>
+        <div class="tree-description">
+          <p>Objek disusun dalam hubungan parent dan child. Transformasi pada parent diterapkan juga ke child, sehingga bagian-bagian objek tetap menyatu saat dipindah, diputar, atau diubah ukurannya.</p>
+          <pre aria-label="Ringkasan hierarki objek scene ITS">Scene ITS
+├── Lingkungan: tanah, jalan, trotoar
+├── Pohon tabebuya: batang, cabang, daun, bunga
+├── Perumahan dosen
+│   ├── Rumah: pondasi, dinding, atap, teras, pintu, jendela
+│   └── Akses gate
+│       ├── Saluran air, jembatan, jalan perumahan, pagar, pos
+│       └── Gerbang utama → engsel → bingkai dan jeruji
+├── Lampu jalan: pondasi, tiang, lengan, LED
+└── Mobil: bodi, kabin, kaca, lampu, poros roda → ban dan velg</pre>
+          <p>Contohnya, atap dan jendela mengikuti transformasi rumah. Gerbang berputar pada node engsel, sedangkan ban dan velg mengikuti poros roda serta perpindahan mobil.</p>
+        </div>
       </section>
     </div>
   </main>

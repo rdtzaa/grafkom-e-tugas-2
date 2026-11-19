@@ -1,6 +1,4 @@
-// Bagian Raditya: perumahan dosen, perlengkapan jalan, lampu, dan mobil.
-// Reuse geometry, texture, dan SceneNode dari helper bersama. Adapter UV
-// memungkinkan helper WebGL2 dipakai renderer WebGL1 tanpa mengganti scene teman.
+
 import { SceneNode, createBox, createCylinder, createNoiseTexture,
   createPavingTexture, createSpeedSignTexture, canvasToTexture, wrap } from '../helper/helper_function.js';
 import { uploadMesh, drawMesh } from '../renderer.js';
